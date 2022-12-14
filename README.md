@@ -1,0 +1,1 @@
+# Simple-bash-script-for-securing-a-linux-operating-system
