@@ -3,20 +3,13 @@
 # update the system
 apt-get update && apt-get upgrade -y
 
-# install firewalls
-apt-get install firewalld -y
-
-# enable the firewall
-systemctl start firewalld
-systemctl enable firewalld
-
-# add rules to the firewall
-firewall-cmd --permanent --add-service=ssh
-firewall-cmd --permanent --add-service=http
-firewall-cmd --permanent --add-service=https
-
-# enable the firewall rules
-firewall-cmd --reload
+# Configure the firewall to only allow incoming connections on certain ports
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow ssh
+ufw allow http
+ufw allow https
+ufw enable
 
 # install fail2ban
 apt-get install fail2ban -y
@@ -57,3 +50,13 @@ cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 
 # Restart Fail2Ban to apply the changes
 service fail2ban restart
+
+# Install and configure AppArmor to protect the system
+apt-get install apparmor apparmor-utils
+aa-enforce /etc/apparmor.d/*
+
+# Install and configure auditd to monitor system events
+apt-get install auditd
+sed -i 's/^GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="audit=1"/' /etc/default/grub
+update-grub
+service auditd restart
