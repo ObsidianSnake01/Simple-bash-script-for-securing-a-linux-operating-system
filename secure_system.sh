@@ -48,3 +48,12 @@ rkhunter --update
 
 # run the rootkit hunter
 rkhunter --check
+
+# Install and configure Fail2Ban
+apt-get install fail2ban
+
+# Copy the default Fail2Ban configuration file
+cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+
+# Restart Fail2Ban to apply the changes
+service fail2ban restart
